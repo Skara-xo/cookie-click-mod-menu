@@ -3,7 +3,7 @@
 // @namespace    http://tampermonkey.net/
 // @version      3.1
 // @description  AutoClick, AutoReindeer, AutoGolden (30s, sauf colère), Mute/Expand avec raccourcis clavier, UI compacte et draggable (AutoGolden ON par défaut)
-// @author       
+// @author
 // @match        *://orteil.dashnet.org/cookieclicker/*
 // @grant        none
 // ==/UserScript==
@@ -84,9 +84,22 @@
             autoclickerActive = !autoclickerActive;
             btnAuto.classList.toggle('active', autoclickerActive);
             updateButtonStyle(btnAuto, autoclickerActive);
-            if (autoclickerActive) interval = setInterval(() => Game.ClickCookie(), 10);
-            else clearInterval(interval);
-        }, 'btnAuto');
+
+            if (autoclickerActive) {
+                interval = setInterval(() => Game.ClickCookie(), 10);
+            } else {
+                clearInterval(interval);
+                setTimeout(() => {
+            if (!autoclickerActive) {
+                autoclickerActive = true;
+                btnAuto.classList.add('active');
+                updateButtonStyle(btnAuto, true);
+                interval = setInterval(() => Game.ClickCookie(), 10);
+            }
+        }, 5000); // 🔁 Réactivation automatique après 5 secondes
+    }
+}, 'btnAuto');
+
 
         let autoreindeerActive = true;
         const btnAutoReindeer = createButton('🎅', 'AutoReindeer', 'Clic Auto Renne', () => {
