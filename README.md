@@ -1,7 +1,7 @@
 script tampermonkey
 
 for cookie clicker
-
+https://orteil.dashnet.org/cookieclicker/
 
 -autoclick (shortcut A)
 
