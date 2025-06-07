@@ -1,10 +1,11 @@
 // ==UserScript==
 // @name         Cookie Clicker - Mod Menu avec AutoClick et AutoReindeer et Toggle Mute/Expand
 // @namespace    http://tampermonkey.net/
-// @version      1.6
+// @version      2.0
 // @description  Mod menu avec autoclick, auto reindeer, expand/sourdine avec raccourcis clavier, sauvegarde, export, UI draggable sur titre uniquement.
 // @author       Adapted
 // @match        *://orteil.dashnet.org/cookieclicker/*
+// @downloadURL  https://github.com/Skara-xo/cookieclickxxx/blob/main/CookieClicker-ModMenu.js
 // @grant        none
 // ==/UserScript==
 
