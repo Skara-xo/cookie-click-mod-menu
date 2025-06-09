@@ -163,7 +163,7 @@
             Game.shimmers.forEach(shimmer => {
                 if (shimmer.type === 'reindeer' && !shimmer.clickedByAuto) {
                     shimmer.clickedByAuto = true;
-                    setTimeout(() => shimmer.pop(), 2000);
+                    setTimeout(() => shimmer.pop(), 500);
                 }
             });
         }, 500);
@@ -174,7 +174,7 @@
                 if (shimmer.type === 'golden' && !shimmer.clickedByAuto && shimmer.spawnLead && !shimmer.wrath) {
                     const id = shimmer.id || shimmer.l;
                     if (!goldenSeen.has(id)) goldenSeen.set(id, Date.now());
-                    if (Date.now() - goldenSeen.get(id) >= 30000) {
+                    if (Date.now() - goldenSeen.get(id) >= 10000) {
                         shimmer.clickedByAuto = true;
                         shimmer.pop();
                         PlaySound('snd/click.mp3');
