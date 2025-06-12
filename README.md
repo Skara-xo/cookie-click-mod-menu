@@ -1,81 +1,81 @@
-# Cookie Clicker - Mod Menu Complet
+# Cookie Clicker - Complete Mod Menu
 
-**Un menu compact et personnalisable pour Cookie Clicker, avec AutoClick, AutoReindeer, AutoGolden, et contrôle rapide des bâtiments.**
+**A compact and customizable menu for Cookie Clicker featuring AutoClick, AutoReindeer, AutoGolden, and quick building controls.**
 
 ---
 
 ## Description
 
-Ce script Tampermonkey améliore l’expérience de jeu sur [Cookie Clicker](https://orteil.dashnet.org/cookieclicker/) en ajoutant un menu flottant et déplaçable proposant plusieurs automatisations et commandes utiles :
+This Tampermonkey script enhances your gameplay on [Cookie Clicker](https://orteil.dashnet.org/cookieclicker/) by adding a floating, draggable menu offering several useful automations and quick commands:
 
-- Auto clic rapide sur le cookie principal (AutoClick) avec réactivation automatique.  
-- Auto clic sur les rennes pendant la période de Noël (AutoReindeer).  
-- Auto clic sur les cookies dorés après 30 secondes, sauf les cookies de colère (AutoGolden).  
-- Bouton pour réduire ou agrandir tous les bâtiments d’un coup.  
-- Sauvegarde et exportation de la partie à portée de clic.  
-- Activation par défaut d’AutoClick et AutoGolden.  
-- Contrôle via raccourcis clavier pour plus de rapidité.
+- Fast automatic clicks on the main cookie (AutoClick) with auto-reactivation.  
+- Automatic clicking on reindeers during the Christmas season (AutoReindeer).  
+- Automatic clicking on golden cookies after 30 seconds, except wrath cookies (AutoGolden).  
+- Button to expand or collapse all buildings at once.  
+- Manual save and export options.  
+- AutoClick and AutoGolden enabled by default.  
+- Keyboard shortcuts for quick control.
 
 ---
 
-## Fonctionnalités
+## Features
 
-- 🖱️ **AutoClick** : Clic automatique ultra rapide sur le cookie principal, avec auto-réactivation.  
-- 🎅 **AutoReindeer** : Clic automatique sur les rennes de Noël pour profiter des bonus saisonniers.  
-- 🍪 **AutoGolden** : Clic automatique sur les cookies dorés après 30 secondes, sauf les cookies de colère (wrath cookies).  
-- ↕️ **Mute/Expand** : Réduit ou agrandit instantanément tous les bâtiments.  
-- 💾 **Save** : Sauvegarde manuelle de la partie.  
-- 📤 **Export** : Export facile de la sauvegarde.
+- 🖱️ **AutoClick**: Ultra-fast automatic clicking on the main cookie, with auto-reactivation.  
+- 🎅 **AutoReindeer**: Automatically click Christmas reindeers to benefit from seasonal bonuses.  
+- 🍪 **AutoGolden**: Automatically click golden cookies after 30 seconds, excluding wrath cookies.  
+- ↕️ **Mute/Expand**: Collapse or expand all buildings instantly.  
+- 💾 **Save**: Manual game save.  
+- 📤 **Export**: Easy export of your save file.
 
 ---
 
 ## Installation
 
-1. Installer [Tampermonkey](https://www.tampermonkey.net/) (ou équivalent) dans votre navigateur.  
-2. Créer un nouveau script utilisateur.  
-3. Copier-coller le contenu du script dans l’éditeur Tampermonkey.  
-4. Enregistrer et activer le script.  
-5. Charger ou recharger la page du jeu Cookie Clicker.  
-6. Le menu apparaîtra en haut, au centre, prêt à l’emploi.
+1. Install [Tampermonkey](https://www.tampermonkey.net/) (or a similar userscript manager) in your browser.  
+2. Create a new userscript.  
+3. Copy and paste the script content into the Tampermonkey editor.  
+4. Save and enable the script.  
+5. Load or reload the Cookie Clicker game page.  
+6. The mod menu will appear at the top center, ready to use.
 
 ---
 
-## Raccourcis Clavier
+## Keyboard Shortcuts
 
-| Touche | Action                  |
-|--------|-------------------------|
-| `A`    | Basculer AutoClick      |
-| `E`    | Basculer AutoGolden     |
-| `Z`    | Basculer Mute/Expand    |
-| `&`    | Mute/Expand bâtiment ID 2 |
-| `É`    | Mute/Expand bâtiment ID 5 |
-| `"`    | Mute/Expand bâtiment ID 6 |
-| `'`    | Mute/Expand bâtiment ID 7 |
+| Key   | Action                  |
+|-------|-------------------------|
+| `A`   | Toggle AutoClick        |
+| `E`   | Toggle AutoGolden       |
+| `Z`   | Toggle Mute/Expand      |
+| `&`   | Mute/Expand building ID 2 |
+| `É`   | Mute/Expand building ID 5 |
+| `"`   | Mute/Expand building ID 6 |
+| `'`   | Mute/Expand building ID 7 |
 
 ---
 
 ## Usage
 
-- Le menu est déplaçable en cliquant-glissant sur le titre "Mod Menu".  
-- Les boutons changent de couleur pour indiquer l’état actif/inactif.  
-- AutoClick se réactive automatiquement 5 secondes après une désactivation manuelle.  
-- AutoGolden ignore les cookies dorés de colère pour éviter les pénalités.  
-- Les clics automatiques sur les rennes ne fonctionnent que durant la période de Noël.
+- Drag the menu by clicking and holding the “Mod Menu” title.  
+- Buttons change color to indicate active/inactive status.  
+- AutoClick automatically reactivates 5 seconds after manual deactivation.  
+- AutoGolden skips wrath cookies to avoid penalties.  
+- AutoReindeer clicks work only during the Christmas season.
 
 ---
 
 ## Contribution
 
-N’hésitez pas à proposer des améliorations, rapporter des bugs ou suggérer des fonctionnalités via des issues ou pull requests.
+Feel free to suggest improvements, report bugs, or request features via issues or pull requests.
 
 ---
 
-## Licence
+## License
 
-MIT License - utilisation et modification libres.
+MIT License - free to use and modify.
 
 ---
 
-## Auteur
+## Author
 
-Script développé par Skara-xo + IA
+Script developed by Skara-xo + AI
