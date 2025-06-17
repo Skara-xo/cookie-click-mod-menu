@@ -16,8 +16,6 @@
         if (typeof Game !== 'undefined' && Game.ready) {
             clearInterval(waitForGame);
             initModMenu();
-            initKeyboardShortcuts();
-            console.log("[Mod Menu] Chargé avec raccourcis Q/W/X/C/V/E/A/Z");
         }
     }, 500);
 
@@ -27,13 +25,12 @@
         Object.assign(menu.style, {
             position: 'fixed',
             top: '15px',
-            left: '50%',
-            transform: 'translateX(-50%)',
             zIndex: 10000,
             background: 'rgba(0, 0, 0, 0.85)',
             color: '#fff',
             padding: '6px 12px',
             borderRadius: '10px',
+            border: '1px solid white',
             fontFamily: 'Arial, sans-serif',
             fontSize: '13px',
             boxShadow: '0 0 8px #000',
@@ -44,16 +41,43 @@
             cursor: 'default'
         });
 
+        const savedX = localStorage.getItem('hackMenuX');
+        const savedY = localStorage.getItem('hackMenuY');
+
+        if (savedX && savedY) {
+            menu.style.left = savedX;
+            menu.style.top = savedY;
+        } else {
+            menu.style.left = '25%';
+        }
+
         const title = document.createElement('div');
         title.textContent = 'Mod Menu';
         title.style.fontWeight = 'bold';
         title.style.marginRight = '10px';
-        title.style.cursor = 'pointer';
+        title.style.cursor = 'grab';
         menu.appendChild(title);
+
+        let menuCollapsed = true;
+
+        function updateMenuDisplay() {
+            [...menu.children].forEach(el => {
+                if (el !== title) {
+                    el.innerHTML = menuCollapsed ? el.dataset.iconOnly : el.dataset.fullLabel;
+                }
+            });
+        }
+
+        title.addEventListener('click', () => {
+            menuCollapsed = !menuCollapsed;
+            updateMenuDisplay();
+        });
 
         const createButton = (emoji, label, titleText, onclick, id) => {
             const btn = document.createElement('div');
-            btn.innerHTML = `<span class="emoji">${emoji}</span> <span class="label">${label}</span>`;
+            btn.innerHTML = `${emoji} ${label}`;
+            btn.dataset.fullLabel = `${emoji} ${label}`;
+            btn.dataset.iconOnly = emoji;
             btn.title = titleText;
             btn.id = id;
             Object.assign(btn.style, {
@@ -63,10 +87,7 @@
                 borderRadius: '6px',
                 background: '#333',
                 color: '#fff',
-                transition: 'background 0.2s, border 0.2s',
-                display: 'flex',
-                alignItems: 'center',
-                gap: '4px'
+                transition: 'background 0.2s, border 0.2s'
             });
 
             btn.onmouseenter = () => {
@@ -90,8 +111,20 @@
             autoclickerActive = !autoclickerActive;
             btnAuto.classList.toggle('active', autoclickerActive);
             updateButtonStyle(btnAuto, autoclickerActive);
-            if (autoclickerActive) interval = setInterval(() => Game.ClickCookie(), 10);
-            else clearInterval(interval);
+
+            if (autoclickerActive) {
+                interval = setInterval(() => Game.ClickCookie(), 10);
+            } else {
+                clearInterval(interval);
+                setTimeout(() => {
+                    if (!autoclickerActive) {
+                        autoclickerActive = true;
+                        btnAuto.classList.add('active');
+                        updateButtonStyle(btnAuto, true);
+                        interval = setInterval(() => Game.ClickCookie(), 10);
+                    }
+                }, 5000);
+            }
         }, 'btnAuto');
 
         let autoreindeerActive = true;
@@ -111,33 +144,26 @@
 
         let buildingsMuted = false;
         const btnMute = createButton('↕️', 'Expand', 'Réduire/agrandir tous les bâtiments', () => {
-            buildingsMuted = !buildingsMuted;
             for (let i in Game.ObjectsById) {
-                Game.ObjectsById[i].mute(buildingsMuted);
+                Game.ObjectsById[i].mute(!buildingsMuted);
             }
-            btnMute.classList.toggle('active', buildingsMuted);
-            updateButtonStyle(btnMute, buildingsMuted);
-        }, 'btnMute');
+            buildingsMuted = !buildingsMuted;
+        });
 
         const btnSave = createButton('💾', 'Save', 'Sauvegarder', () => Game.toSave = true);
         const btnExport = createButton('📤', 'Export', 'Exporter sauvegarde', () => Game.ExportSave());
 
-        const buttons = [btnAuto, btnAutoReindeer, btnAutoGolden, btnMute, btnSave, btnExport];
-        buttons.forEach(btn => menu.appendChild(btn));
+        [btnAuto, btnAutoReindeer, btnAutoGolden, btnMute, btnSave, btnExport].forEach(btn => menu.appendChild(btn));
+        updateMenuDisplay();
         document.body.appendChild(menu);
 
-        let isCompact = false;
-        function toggleCompactMode(forceState = null) {
-            isCompact = forceState !== null ? forceState : !isCompact;
-            document.querySelectorAll('#hackMenu .label').forEach(label => {
-                label.style.display = isCompact ? 'none' : 'inline';
-            });
+        // Corriger la position initiale pour 25% de largeur écran sans translate
+        if (!savedX && !savedY) {
+            setTimeout(() => {
+                menu.style.left = `calc(25% - ${menu.offsetWidth / 2}px)`;
+            }, 0);
         }
 
-        setTimeout(() => toggleCompactMode(true), 100);
-        title.addEventListener('click', () => toggleCompactMode());
-
-        // Rendre le menu draggable
         let offsetX = 0, offsetY = 0, dragging = false;
         title.addEventListener('mousedown', function (e) {
             dragging = true;
@@ -148,9 +174,12 @@
         });
         document.addEventListener('mousemove', function (e) {
             if (dragging) {
-                menu.style.left = (e.clientX - offsetX) + 'px';
-                menu.style.top = (e.clientY - offsetY) + 'px';
-                menu.style.transform = 'none';
+                const left = (e.clientX - offsetX);
+                const top = (e.clientY - offsetY);
+                menu.style.left = `${left}px`;
+                menu.style.top = `${top}px`;
+                localStorage.setItem('hackMenuX', `${left}px`);
+                localStorage.setItem('hackMenuY', `${top}px`);
             }
         });
         document.addEventListener('mouseup', function () {
@@ -166,7 +195,6 @@
             btn.style.borderColor = active ? 'lime' : '#ccc';
         }
 
-        // Auto boucle
         setInterval(() => {
             if (!autoreindeerActive || Game.season !== 'christmas') return;
             Game.shimmers.forEach(shimmer => {
@@ -183,81 +211,41 @@
                 if (shimmer.type === 'golden' && !shimmer.clickedByAuto && shimmer.spawnLead && !shimmer.wrath) {
                     const id = shimmer.id || shimmer.l;
                     if (!goldenSeen.has(id)) goldenSeen.set(id, Date.now());
-                    if (Date.now() - goldenSeen.get(id) >= 30000) {
+                    if (Date.now() - goldenSeen.get(id) >= 10000) {
                         shimmer.clickedByAuto = true;
                         shimmer.pop();
+                        PlaySound('snd/click.mp3');
                         goldenSeen.delete(id);
                     }
                 }
             });
         }, 1000);
 
-        // Activation auto par défaut
+        window.addEventListener('keydown', e => {
+            if (e.repeat) return;
+            const toggleMuteExpand = id => {
+                const isMuted = Game.ObjectsById[id].muted;
+                const btn = document.getElementById(isMuted ? `mutedProduct${id}` : `productMute${id}`);
+                if (btn) btn.click();
+            };
+
+            switch (e.key) {
+                case 'a': case 'A': btnAuto.click(); break;
+                case 'z': case 'Z': btnMute.click(); break;
+                case 'e': case 'E': btnAutoGolden.click(); break;
+                case '&': toggleMuteExpand(2); break;
+                case 'é': toggleMuteExpand(5); break;
+                case '"': toggleMuteExpand(6); break;
+                case '\'': toggleMuteExpand(7); break;
+            }
+        });
+
         setTimeout(() => {
-            btnAuto.click();
-            btnAutoGolden.click();
+            btnAuto.click();         // AutoClick activé
+            btnAutoGolden.click();   // AutoGolden activé
             updateButtonStyle(btnAuto, autoclickerActive);
             updateButtonStyle(btnAutoReindeer, autoreindeerActive);
             updateButtonStyle(btnAutoGolden, autogoldenActive);
         }, 500);
     }
-
-    function initKeyboardShortcuts() {
-        document.addEventListener('keydown', (e) => {
-            if (e.repeat) return;
-            const key = e.key.toLowerCase();
-            console.log(`[Raccourci] Touche pressée : ${key}`);
-
-            switch (key) {
-                case 'q': {
-                    const buy = document.getElementById('storeBulkBuy');
-                    const sell = document.getElementById('storeBulkSell');
-                    if (buy?.classList.contains('selected')) {
-                        sell?.click();
-                        console.log("[Q] → 💰 Vendre");
-                    } else {
-                        buy?.click();
-                        console.log("[Q] → 🛒 Acheter");
-                    }
-                    break;
-                }
-                case 'w':
-                    document.getElementById('storeBulk1')?.click();
-                    console.log("[W] → Quantité : 1");
-                    break;
-                case 'x':
-                    document.getElementById('storeBulk10')?.click();
-                    console.log("[X] → Quantité : 10");
-                    break;
-                case 'c':
-                    document.getElementById('storeBulk100')?.click();
-                    console.log("[C] → Quantité : 100");
-                    break;
-                case 'v':
-                    document.getElementById('storeBulkMax')?.click();
-                    console.log("[V] → Quantité : Max");
-                    break;
-                case 'e':
-                    document.getElementById('btnAutoGolden')?.click();
-                    console.log("[E] → AutoGolden toggle");
-                    break;
-                case 'a':
-                    document.getElementById('btnAuto')?.click();
-                    console.log("[A] → AutoClick toggle");
-                    break;
-                case 'z': {
-                    const muteBtn = document.getElementById('btnMute');
-                    muteBtn?.click();
-                    console.log("[Z] → Mute/Expand toggle");
-                    break;
-                }
-                // Cas spéciaux AZERTY (optionnel)
-                case '&': Game.ObjectsById[2]?.mute(); break;
-                case 'é': Game.ObjectsById[5]?.mute(); break;
-                case '"': Game.ObjectsById[6]?.mute(); break;
-                case '\'': Game.ObjectsById[7]?.mute(); break;
-            }
-        });
-    }
-
 })();
