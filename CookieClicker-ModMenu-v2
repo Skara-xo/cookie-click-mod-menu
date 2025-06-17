@@ -16,6 +16,8 @@
         if (typeof Game !== 'undefined' && Game.ready) {
             clearInterval(waitForGame);
             initModMenu();
+            initKeyboardShortcuts();
+            console.log("[Mod Menu] Chargé avec raccourcis Q/W/X/C/V/E/A/Z");
         }
     }, 500);
 
@@ -68,10 +70,12 @@
             });
 
             btn.onmouseenter = () => {
-                btn.style.background = btn.classList.contains('active') ? 'green' : '#555';
+                if (btn.classList.contains('active')) btn.style.background = 'green';
+                else btn.style.background = '#555';
             };
             btn.onmouseleave = () => {
-                btn.style.background = btn.classList.contains('active') ? 'green' : '#333';
+                if (btn.classList.contains('active')) btn.style.background = 'green';
+                else btn.style.background = '#333';
             };
             btn.onclick = () => {
                 PlaySound('snd/tick.mp3');
@@ -107,11 +111,13 @@
 
         let buildingsMuted = false;
         const btnMute = createButton('↕️', 'Expand', 'Réduire/agrandir tous les bâtiments', () => {
-            for (let i in Game.ObjectsById) {
-                Game.ObjectsById[i].mute(!buildingsMuted);
-            }
             buildingsMuted = !buildingsMuted;
-        });
+            for (let i in Game.ObjectsById) {
+                Game.ObjectsById[i].mute(buildingsMuted);
+            }
+            btnMute.classList.toggle('active', buildingsMuted);
+            updateButtonStyle(btnMute, buildingsMuted);
+        }, 'btnMute');
 
         const btnSave = createButton('💾', 'Save', 'Sauvegarder', () => Game.toSave = true);
         const btnExport = createButton('📤', 'Export', 'Exporter sauvegarde', () => Game.ExportSave());
@@ -131,6 +137,7 @@
         setTimeout(() => toggleCompactMode(true), 100);
         title.addEventListener('click', () => toggleCompactMode());
 
+        // Rendre le menu draggable
         let offsetX = 0, offsetY = 0, dragging = false;
         title.addEventListener('mousedown', function (e) {
             dragging = true;
@@ -159,7 +166,7 @@
             btn.style.borderColor = active ? 'lime' : '#ccc';
         }
 
-        // Boucles auto
+        // Auto boucle
         setInterval(() => {
             if (!autoreindeerActive || Game.season !== 'christmas') return;
             Game.shimmers.forEach(shimmer => {
@@ -185,29 +192,7 @@
             });
         }, 1000);
 
-        // 🔥 Raccourcis clavier personnalisés
-        window.addEventListener('keydown', e => {
-            if (e.repeat) return;
-            switch (e.key.toLowerCase()) {
-                case 'a': btnAuto.click(); break;
-                case 'z': btnMute.click(); break;
-                case 'e': btnAutoGolden.click(); break;
-                case '&': Game.ObjectsById[2]?.mute(); break;
-                case 'é': Game.ObjectsById[5]?.mute(); break;
-                case '"': Game.ObjectsById[6]?.mute(); break;
-                case '\'': Game.ObjectsById[7]?.mute(); break;
-                case 'q':
-                    Game.storeBuyMode = Game.storeBuyMode ? 0 : 1;
-                    Game.RefreshStore();
-                    break;
-                case 'w': Game.storeBulkButton(2); break; // 1
-                case 'x': Game.storeBulkButton(3); break; // 10
-                case 'c': Game.storeBulkButton(4); break; // 100
-                case 'v': Game.storeBulkButton(5); break; // Max
-                    break;
-            }
-        });
-
+        // Activation auto par défaut
         setTimeout(() => {
             btnAuto.click();
             btnAutoGolden.click();
@@ -216,4 +201,63 @@
             updateButtonStyle(btnAutoGolden, autogoldenActive);
         }, 500);
     }
+
+    function initKeyboardShortcuts() {
+        document.addEventListener('keydown', (e) => {
+            if (e.repeat) return;
+            const key = e.key.toLowerCase();
+            console.log(`[Raccourci] Touche pressée : ${key}`);
+
+            switch (key) {
+                case 'q': {
+                    const buy = document.getElementById('storeBulkBuy');
+                    const sell = document.getElementById('storeBulkSell');
+                    if (buy?.classList.contains('selected')) {
+                        sell?.click();
+                        console.log("[Q] → 💰 Vendre");
+                    } else {
+                        buy?.click();
+                        console.log("[Q] → 🛒 Acheter");
+                    }
+                    break;
+                }
+                case 'w':
+                    document.getElementById('storeBulk1')?.click();
+                    console.log("[W] → Quantité : 1");
+                    break;
+                case 'x':
+                    document.getElementById('storeBulk10')?.click();
+                    console.log("[X] → Quantité : 10");
+                    break;
+                case 'c':
+                    document.getElementById('storeBulk100')?.click();
+                    console.log("[C] → Quantité : 100");
+                    break;
+                case 'v':
+                    document.getElementById('storeBulkMax')?.click();
+                    console.log("[V] → Quantité : Max");
+                    break;
+                case 'e':
+                    document.getElementById('btnAutoGolden')?.click();
+                    console.log("[E] → AutoGolden toggle");
+                    break;
+                case 'a':
+                    document.getElementById('btnAuto')?.click();
+                    console.log("[A] → AutoClick toggle");
+                    break;
+                case 'z': {
+                    const muteBtn = document.getElementById('btnMute');
+                    muteBtn?.click();
+                    console.log("[Z] → Mute/Expand toggle");
+                    break;
+                }
+                // Cas spéciaux AZERTY (optionnel)
+                case '&': Game.ObjectsById[2]?.mute(); break;
+                case 'é': Game.ObjectsById[5]?.mute(); break;
+                case '"': Game.ObjectsById[6]?.mute(); break;
+                case '\'': Game.ObjectsById[7]?.mute(); break;
+            }
+        });
+    }
+
 })();
