@@ -6,6 +6,7 @@
 // @author
 // @match        *://orteil.dashnet.org/cookieclicker/*
 // @grant        none
+// @license      MIT
 // ==/UserScript==
 
 (function () {
