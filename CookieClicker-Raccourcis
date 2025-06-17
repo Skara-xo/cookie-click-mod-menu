@@ -1,0 +1,66 @@
+// ==UserScript==
+// @name         Cookie Clicker - Raccourcis Clavier Achat/Vente
+// @namespace    http://tampermonkey.net/
+// @version      1.2
+// @description  Touche Q pour Acheter/Vendre, W/X/C/V pour les quantités dans Cookie Clicker ! 🛒💰
+// @author       ...
+// @match        https://orteil.dashnet.org/cookieclicker/*
+// @grant        none
+// ==/UserScript==
+
+(function () {
+    'use strict';
+
+    const wait = setInterval(() => {
+        if (typeof Game !== 'undefined' && Game.ready) {
+            clearInterval(wait);
+            console.log("[Raccourcis] Initialisés");
+            initKeyboardShortcuts();
+        }
+    }, 500);
+
+    function initKeyboardShortcuts() {
+        document.addEventListener('keydown', (e) => {
+            const key = e.key.toLowerCase();
+
+            switch (key) {
+                case 'q': {
+                    const buy = document.getElementById('storeBulkBuy');
+                    const sell = document.getElementById('storeBulkSell');
+                    if (buy?.classList.contains('selected')) {
+                        sell?.click();
+                        console.log("[Q] → 💰 Vendre");
+                    } else {
+                        buy?.click();
+                        console.log("[Q] → 🛒 Acheter");
+                    }
+                    break;
+                }
+
+                case 'w': {
+                    document.getElementById('storeBulk1')?.click();
+                    console.log("[W] → Quantité : 1");
+                    break;
+                }
+
+                case 'x': {
+                    document.getElementById('storeBulk10')?.click();
+                    console.log("[X] → Quantité : 10");
+                    break;
+                }
+
+                case 'c': {
+                    document.getElementById('storeBulk100')?.click();
+                    console.log("[C] → Quantité : 100");
+                    break;
+                }
+
+                case 'v': {
+                    document.getElementById('storeBulkMax')?.click();
+                    console.log("[V] → Quantité : Max");
+                    break;
+                }
+            }
+        });
+    }
+})();
